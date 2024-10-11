@@ -68,8 +68,6 @@ namespace Phonebook
                     return true;
                 }
             } catch {
-                MessageBox.Show("No Such Person In Table");
-
                 return false;
             }
         }
@@ -124,24 +122,30 @@ namespace Phonebook
         private void DeleteRecordBtn_Click(object sender, EventArgs e)
         {
 
-            if (this.AllFieldsCompleted() && this.ValidateInputs() && this.PersonExists())
+            if (this.AllFieldsCompleted() && this.ValidateInputs())
             {
-                String delete_query = $"DELETE FROM People WHERE first_name = '{first_name}' AND last_name = '{last_name}' AND phone_number = '{phone_number}'";
-                SqlCommand insert_command = new SqlCommand(delete_query, connection);
-                SqlDataReader sql_reader;
+                if (this.PersonExists())
+                {
+                    String delete_query = $"DELETE FROM People WHERE first_name = '{first_name}' AND last_name = '{last_name}' AND phone_number = '{phone_number}'";
+                    SqlCommand insert_command = new SqlCommand(delete_query, connection);
+                    SqlDataReader sql_reader;
 
-                connection.Open();
+                    connection.Open();
 
-                sql_reader = insert_command.ExecuteReader();
-                sql_reader.Close();
+                    sql_reader = insert_command.ExecuteReader();
+                    sql_reader.Close();
 
-                this.RefreshDataTable();
+                    this.RefreshDataTable();
 
-                MessageBox.Show($"Person: {first_name} {last_name} Deleted Succesfully");
+                    MessageBox.Show($"Person: {first_name} {last_name} Deleted Succesfully");
 
-                connection.Close();
+                    connection.Close();
+                }
+                else
+                {
+                    MessageBox.Show("No Such Person In Table");
+                }
             }
-
         }
 
         private void AddRecordBtn_Click(object sender, EventArgs e)
